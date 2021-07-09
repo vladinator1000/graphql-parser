@@ -7,6 +7,8 @@ use crate::{
     query::Field,
     schema::{Directive, Document, EnumValue, Text, Type, Value},
 };
+
+#[derive(Debug)]
 pub struct TypeInfo<'ast, T: Text<'ast>> {
     schema: Document<'ast, T>,
     type_stack: Vec<Option<Type<'ast, T>>>,
@@ -67,7 +69,6 @@ impl<'ast, T: Text<'ast>> TypeInfo<'ast, T> {
 
 #[cfg(test)]
 mod type_info_tests {
-    use k9::assert_equal;
     use query::{Text, Type};
 
     use crate::{
