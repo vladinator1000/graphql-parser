@@ -47,10 +47,32 @@ pub enum VisitorAction<'ast, T: Text<'ast>> {
     ReplaceNode(QueryAstNode<'ast, T>),
 }
 
+type Keys<'ast, T: Text<'ast>> = Vec<&'ast QueryAstNode<'ast, T>>;
+type Edits = Vec<i32>;
+
+struct VisitorStack<'ast, T: Text<'ast>> {
+    index: i32,
+    keys: Keys<'ast, T>,
+    edits: Edits,
+    previous: Box<VisitorStack<'ast, T>> 
+}
+
 pub fn visit<'ast, V: QueryVisitor<'ast, T>, T: Text<'ast>>(
     node: &'ast QueryAstNode<'ast, T>,
     visitor: &mut V,
 ) -> QueryAstNode<'ast, T> {
+    let mut stack: Option<VisitorStack<'ast, T>> = None;
+    let mut keys: Keys<'ast, T> = vec![node];
+    let index = -1;
+    let edits = [];
+    // TODO port these
+    // let node: any = undefined;
+    // let key: any = undefined;
+    // let parent: any = undefined;
+    // let path: any = [];
+    // let ancestors = [];
+    // let newRoot = root;
+
     unimplemented!()
 }
 
@@ -64,7 +86,7 @@ mod visitor_tests {
     use crate::Pos;
 
     #[test]
-    fn allows_node_editing_both_on_enter_and_leave() {
+    fn node_editing_on_enter() {
         let ast: Document<&str> =
             parse_query("{ a, b, c { a, b, c } }").expect("Failed to parse query");
 
@@ -121,4 +143,8 @@ mod visitor_tests {
             assert_equal!(edited, expected);
         }
     }
+    
+
+    #[test]
+    fn node_editing_on_leave() {}
 }
