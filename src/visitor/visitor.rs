@@ -48,30 +48,33 @@ pub enum VisitorAction<'ast, T: Text<'ast>> {
 }
 
 type Keys<'ast, T: Text<'ast>> = Vec<&'ast QueryAstNode<'ast, T>>;
-type Edits = Vec<i32>;
+type KeyNodeTuple<'ast, T: Text<'ast>> = (&'ast QueryAstNode<'ast, T>, &'ast QueryAstNode<'ast, T>); 
+type Edits<'ast, T: Text<'ast>> = Vec<KeyNodeTuple<'ast, T>>;
 
 struct VisitorStack<'ast, T: Text<'ast>> {
     index: i32,
     keys: Keys<'ast, T>,
-    edits: Edits,
+    edits: Edits<'ast, T>,
     previous: Box<VisitorStack<'ast, T>> 
 }
 
+
+/// Porting this function from graphql-js
+/// https://github.com/graphql/graphql-js/blob/4493ca3d1281e01635570824f70867aa68610323/src/language/visitor.ts#L247
 pub fn visit<'ast, V: QueryVisitor<'ast, T>, T: Text<'ast>>(
-    node: &'ast QueryAstNode<'ast, T>,
+    root: &'ast QueryAstNode<'ast, T>,
     visitor: &mut V,
 ) -> QueryAstNode<'ast, T> {
     let mut stack: Option<VisitorStack<'ast, T>> = None;
-    let mut keys: Keys<'ast, T> = vec![node];
-    let index = -1;
-    let edits = [];
-    // TODO port these
-    // let node: any = undefined;
-    // let key: any = undefined;
-    // let parent: any = undefined;
-    // let path: any = [];
-    // let ancestors = [];
-    // let newRoot = root;
+    let mut keys: Keys<'ast, T> = vec![root];
+    let mut index = -1;
+    let edits: Edits<'ast, T> = vec![];
+    let mut node: Option<&'ast QueryAstNode<'ast, T>> = None;
+    let mut key: Option<&'ast QueryAstNode<'ast, T>> = None;
+    let mut parent: Option<&'ast QueryAstNode<'ast, T>> = None;
+    let path: Vec<&'ast QueryAstNode<'ast, T>> = vec![];
+    let ancestors: Vec<&'ast QueryAstNode<'ast, T>> = vec![];
+    let mut new_root: &'ast QueryAstNode<'ast, T> = root;
 
     unimplemented!()
 }
